@@ -2,13 +2,17 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import InputError from '@/Components/InputError.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
+
 import Chirp from '@/Components/Chirp.vue' ;
 import { useForm, Head } from '@inertiajs/vue3';
  
 defineProps(['chirps']) ;
+
 const form = useForm({
     message: '',
+    image : ''
 });
+
 </script>
  
 <template>
@@ -17,14 +21,21 @@ const form = useForm({
     <AuthenticatedLayout>
         <div class="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
             
-
-            <form @submit.prevent="form.post(route('chirps.store'), { onSuccess: () => form.reset() })">
+            <!--  -->
+            <form @submit.prevent=" form.post(route('chirps.store'), { onSuccess: () => form.reset() })
+">
+                
                 <textarea
                     v-model="form.message"
                     placeholder="What's on your mind?"
                     class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
                 ></textarea>
                 <InputError :message="form.errors.message" class="mt-2" />
+
+                <input type="file" @change="form.image = $event.target.files[0]"  accept="image/jpeg, image/png" multiple >
+                
+                <InputError :message="form.errors.image" class="mt-2" />
+
                 <PrimaryButton class="mt-4">Post</PrimaryButton>
             </form>
             <div class="mt-6 bg-white shadow-sm rounded-lg divide-y">

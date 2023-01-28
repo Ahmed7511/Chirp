@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Chirp;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 
 class ChirpController extends Controller
 {
@@ -39,10 +41,21 @@ class ChirpController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'message' => ['required', 'string', 'max:255']
+        $request->validate([
+            'message' => ['required', 'string', 'max:255'] ,
+            // 'image' => ['mimes:jpeg,jpg,png,gif', 'max:1000']
         ]);
-        $request->user()->chirps()->create($validated);
+       $imageName = $request->image ;
+       if($request->image){
+         $imageName = time().'.'.$request->image->extension();
+       
+        $request->file('image')->storeAs('chirps/images',  $imageName, 'public');
+        }
+         $user = Auth::user();
+        $user->chirps()->create([
+             'message' => $request->message,
+             'image' => $imageName
+        ]);
         return redirect(route('chirps.index'));
     }
 
@@ -82,6 +95,7 @@ class ChirpController extends Controller
         $validated = $request->validate([
             'message' => 'required|string|max:255',
         ]);
+        
  
         $chirp->update($validated);
  
@@ -97,6 +111,10 @@ class ChirpController extends Controller
     public function destroy(Chirp $chirp)
     {
         $this->authorize('delete', $chirp);
+      ;
+        if(Storage::exists('public/chirps/images/'.$chirp->image)){
+            Storage::delete('public/chirps/images/'.$chirp->image);
+          }
        
         $chirp->delete();
         
