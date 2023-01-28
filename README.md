@@ -12,6 +12,7 @@ to use this projet do : 1- install the project
                         4- php artisan key:generate
                         5- updtade database connection in the .env file
                         6- run php artisan migrate
+                        7- run php artisan storage:link 
                         7- run php artisan serve 
                         8- run npm run dev 
                
