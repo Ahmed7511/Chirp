@@ -2,7 +2,6 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import InputError from '@/Components/InputError.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
-
 import Chirp from '@/Components/Chirp.vue' ;
 import { useForm, Head } from '@inertiajs/vue3';
  
@@ -45,6 +44,9 @@ const form = useForm({
                     :chirp="chirp"
                 />
             </div>
+            
         </div>
+         
     </AuthenticatedLayout>
+    
 </template>
